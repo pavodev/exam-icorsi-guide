@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link href="./src/output.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exam instructions</title>
+</head>
+
+<body class="h-screen bg-[#333]">
+  <!-- Configuration selection overlay -->
+  <div id="config-overlay" class="fixed inset-0 z-50 bg-white/90 backdrop-blur-sm flex items-center justify-center p-6">
+    <form id="config-form"
+      class="w-full max-w-xl bg-white shadow-xl rounded-2xl border border-gray-200 p-6 max-h-[calc(100vh-3rem)] overflow-y-auto">
+      <div class="space-y-1">
+        <p class="text-sm uppercase tracking-wide text-gray-500">Setup</p>
+        <h1 class="text-2xl font-semibold text-gray-900">Choose your exam configuration</h1>
+        <p class="text-sm text-gray-600 pt-5">Select all that apply to this classroom/exam.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-3 text-gray-800 pt-1">
+        <!-- <label
+        class="flex items-start gap-2 rounded-xl border border-gray-200 p-3 hover:border-blue-400 cursor-pointer">
+        <input type="checkbox" name="cfg" value="laptop-exam"
+        class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded" />
+        <div>
+          <p class="font-medium">Laptop exam</p>
+          <p class="text-sm text-gray-600">Students use personal laptops.</p>
+        </div>
+      </label> -->
+
+        <label
+          class="flex items-start gap-2 rounded-xl border border-gray-200 p-3 hover:border-blue-400 cursor-pointer">
+          <input type="checkbox" name="cfg" value="seb-exam"
+            class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded" />
+          <div>
+            <p class="font-medium">SEB exam</p>
+            <p class="text-sm text-gray-600">Safe Exam Browser required.</p>
+          </div>
+        </label>
+
+        <label
+          class="flex items-start gap-2 rounded-xl border border-gray-200 p-3 hover:border-blue-400 cursor-pointer">
+          <input type="checkbox" name="cfg" value="open-book"
+            class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded" />
+          <div>
+            <p class="font-medium">Open book</p>
+            <p class="text-sm text-gray-600">Materials/devices allowed.</p>
+          </div>
+        </label>
+
+        <label
+          class="flex items-start gap-2 rounded-xl border border-gray-200 p-3 hover:border-blue-400 cursor-pointer">
+          <input type="checkbox" name="cfg" value="provided-account"
+            class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded" />
+          <div>
+            <p class="font-medium">SEB Account</p>
+            <p class="text-sm text-gray-600">Account provided by IT</p>
+          </div>
+        </label>
+
+        <label
+          class="flex items-start gap-2 rounded-xl border border-gray-200 p-3 hover:border-blue-400 cursor-pointer">
+          <input type="checkbox" name="cfg" value="personal-account"
+            class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded" />
+          <div>
+            <p class="font-medium">Personal Account</p>
+            <p class="text-sm text-gray-600">Use personal/USI login.</p>
+          </div>
+        </label>
+      </div>
+
+      <div class="space-y-1 pt-5 pb-5">
+        <label for="exam-domain" class="block text-sm text-gray-600">
+          Exam platform domain
+        </label>
+        <input id="exam-domain" name="domain" type="text" value="exam.icorsi.ch"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+          placeholder="exam.icorsi.ch" />
+      </div>
+
+      <div class="space-y-1">
+        <label for="lang" class="block text-sm text-gray-600">
+          Language
+        </label>
+        <select id="lang" name="lang"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+          <option value="en">English</option>
+          <option value="it">Italiano</option>
+        </select>
+      </div>
+
+      <div class="space-y-1 pt-5 pb-5">
+        <div>
+          <div class="flex items-center justify-between">
+            <label for="h2-size" class="block text-sm text-gray-600">
+              Title size
+            </label>
+            <span id="h2-size-value" class="text-sm text-gray-600">1.60</span>
+          </div>
+          <input id="h2-size" name="h2" type="range" min="0.8" max="2.2" step="0.05" value="1.35" class="w-full" />
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between">
+            <label for="h3-size" class="block text-sm text-gray-600">
+              Subtitle size
+            </label>
+            <span id="h3-size-value" class="text-sm text-gray-600">1.20</span>
+          </div>
+          <input id="h3-size" name="h3" type="range" min="0.8" max="2.2" step="0.05" value="1.10" class="w-full" />
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 pt-5">
+        <button id="config-reset" type="button"
+          class="config-reset-btn text-sm text-gray-800 bg-white border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50">
+          Reset selection
+        </button>
+        <button type="submit"
+          class="inline-flex items-center justify-center rounded-lg bg-black px-4 py-2 text-white font-medium shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+          Start guide
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="bg-[#333] w-full h-full mx-auto p-10 box-border">
+    <div class="h-full flex flex-col gap-5 w-full">
+      <div class="steps flex flex-wrap gap-5 w-full h-full items-stretch">
+        <article data-config="personal-account"
+          class="step w-full md:w-[calc(50%-0.625rem)] md:h-[calc(50%-0.625rem)] overflow-hidden rounded-2xl transition hover:shadow-lg py-3 flex flex-col">
+          <div class="p-0 ">
+            <h2
+              class="step__title pt-4 pr-4 pl-4 pb-0 mt-0.5 [clamp(1.1rem,1.6vw,1.6rem)] text-gray-900 text-center font-bold">
+              <span class="step__number"></span>)<span data-i18n="step.computerLogin">Computer Login</span>
+            </h2>
+            <h3 class="mt-0.5 text-[clamp(0.9rem,1.2vw,1.15rem)] text-gray-900 text-center" data-i18n="step.usiAccount">
+              USI account (same you use for Wifi and email access)
+            </h3>
+          </div>
+          <div
+            class="step__image--container relative flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden p-2 md:p-3">
+            <div class="svg-container" data-svg="svg/personal-account-bg.svg"></div>
+          </div>
+        </article>
+        <article data-config="provided-account"
+          class="step w-full md:w-[calc(50%-0.625rem)] md:h-[calc(50%-0.625rem)] overflow-hidden rounded-2xl transition hover:shadow-lg py-3 flex flex-col">
+          <div class="p-0 ">
+            <h2
+              class="step__title pt-4 pr-4 pl-4 pb-0 mt-0.5 [clamp(1.1rem,1.6vw,1.6rem)] text-gray-900 text-center font-bold">
+              <span class="step__number"></span>)<span data-i18n="step.provided">Use provided login
+                credentials</span>
+            </h2>
+          </div>
+          <div
+            class="step__image--container relative flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden p-2 md:p-3">
+            <h3 class="mt-0.5 text-[clamp(0.9rem,1.2vw,1.15rem)] text-gray-900 text-center">
+              <span data-i18n="step.providedDescription">Log in using the credentials provided on the paper in front of
+                you.</span><br /><strong><span data-i18n="step.providedDescription2">Then, fill in and sign the
+                  paper.</span></strong>
+            </h3>
+          </div>
+        </article>
+        <article data-config=""
+          class="step w-full md:w-[calc(50%-0.625rem)] md:h-[calc(50%-0.625rem)] overflow-hidden rounded-2xl transition hover:shadow-lg py-3 flex flex-col">
+          <div class="p-0 ">
+            <h2 class="step__title pt-4 pr-4 pl-4 pb-0 mt-0.5 [clamp(1.1rem,1.6vw,1.6rem)] text-gray-900 text-center">
+              <strong><span class="step__number"></span>)</strong><span data-i18n="step.navigateTo">Navigate to</span>
+              <span class="pulse"><strong><u><span id="exam-domain-label">exam.icorsi.ch</span></u></strong></span>
+            </h2>
+            <h3 class="mt-0.5 text-[clamp(0.9rem,1.2vw,1.15rem)] text-gray-900 text-center"
+              data-i18n="step.switchAccount">
+              Use your Switch Edu-ID account
+            </h3>
+          </div>
+          <div
+            class="step__image--container relative flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden p-2 md:p-3">
+            <div class="svg-container" data-svg="svg/exam-platform.svg"></div>
+            <div class="svg-container" data-svg="svg/switch-login-page.svg"></div>
+          </div>
+        </article>
+        <article data-config="seb-exam"
+          class="step w-full md:w-[calc(50%-0.625rem)] md:h-[calc(50%-0.625rem)] overflow-hidden rounded-2xl transition hover:shadow-lg py-3 flex flex-col">
+          <div class="p-0 ">
+            <h2 class="step__title pt-4 pr-4 pl-4 pb-0 mt-0.5 [clamp(1.1rem,1.6vw,1.6rem)] text-gray-900 text-center">
+              <strong><span class="step__number"></span>)<span data-i18n="step.launchSeb"> Launch Safe Exam
+                  Browser</span></strong>
+            </h2>
+            <h3 class="mt-0.5 text-[clamp(0.9rem,1.2vw,1.15rem)] text-gray-900 text-center" data-i18n="step.getReady">
+              Get ready for the beginning of the exam
+            </h3>
+          </div>
+          <div
+            class="step__image--container relative flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden p-2 md:p-3">
+            <div class="svg-container" data-svg="svg/enter-exam-course.svg"></div>
+          </div>
+        </article>
+        <article data-config="seb-exam"
+          class="step w-full md:w-[calc(50%-0.625rem)] md:h-[calc(50%-0.625rem)] overflow-hidden rounded-2xl transition hover:shadow-lg py-3 flex flex-col">
+          <div class="p-0 ">
+            <h2 class="step__title pt-4 pr-4 pl-4 pb-0 mt-0.5 [clamp(1.1rem,1.6vw,1.6rem)] text-gray-900 text-center">
+              <strong><span class="step__number"></span>)<span data-i18n="step.enterExamAndLaunch">Enter the exam and
+                  Launch Safe Exam Browser</span></strong>
+            </h2>
+            <h3 class="mt-0.5 text-[clamp(0.9rem,1.2vw,1.15rem)] text-gray-900 text-center"
+              data-i18n="step.immediately">
+              Do this immediately, this won't start the exam yet!
+            </h3>
+          </div>
+          <div
+            class="step__image--container relative flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden p-2 md:p-3">
+            <div class="svg-container" data-svg="svg/click-quiz.svg"></div>
+            <div class="svg-container" data-svg="svg/launch-seb.svg"></div>
+          </div>
+        </article>
+        <article data-config="open-book"
+          class="step w-full md:w-[calc(50%-0.625rem)] md:h-[calc(50%-0.625rem)] overflow-hidden rounded-2xl transition hover:shadow-lg py-3 flex flex-col">
+          <div class="p-0 ">
+            <h2 class="step__title pt-4 pr-4 pl-4 pb-0 mt-0.5 [clamp(1.1rem,1.6vw,1.6rem)] text-gray-900 text-center">
+              <strong><span class="step__number"></span>) <span data-i18n="step.openBook">Open Book
+                  Exam</span></span></strong>
+            </h2>
+            <!-- <h3 class="m-auto text-[clamp(0.9rem,1.2vw,1.15rem)] text-gray-900 text-center">
+              This is an open book exam, the professor will clearly explain what materials are allowed for use during
+              the exam.
+            </h3> -->
+          </div>
+          <div
+            class="step__image--container relative flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden p-2 md:p-3">
+            <h3 class="m-auto text-[clamp(0.9rem,1.2vw,1.15rem)] text-gray-900 text-center">
+              <span data-i18n="step.openBookDescription">This is an open-book exam. <br />The professor will explain
+                which materials you are
+                <strong>allowed</strong> to use during
+                the exam.
+              </span>
+            </h3>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Floating password button -->
+  <button id="pwd-fab" type="button"
+    class="z-40 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-2xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+    aria-label="Show exam password" title="Show exam password">
+    🔑
+  </button>
+
+  <!-- Password overlay (same style as config overlay) -->
+  <div id="pwd-overlay" class="fixed inset-0 z-50 bg-white/90 backdrop-blur-sm hidden items-center justify-center p-6"
+    aria-hidden="true">
+    <form id="pwd-form" class="w-full max-w-xl bg-white shadow-xl rounded-2xl border border-gray-200 p-6 space-y-4"
+      autocomplete="off">
+      <div class="space-y-1">
+        <!-- <p class="text-sm uppercase tracking-wide text-gray-500" data-i18n="password.exam">Exam</p> -->
+        <h2 class="text-2xl font-semibold text-gray-900" data-i18n="password.password">Exam password</h2>
+        <!-- <p class="text-sm text-gray-600">
+          To start the exam, type the following password:
+        </p> -->
+      </div>
+
+      <input id="pwd-input" type="password" inputmode="text" autocomplete="off" spellcheck="false" placeholder=""
+        class="w-full rounded-xl border mt-2 mb-6 border-gray-300 px-4 py-4 text-[clamp(1.8rem,3.2vw,3.2rem)] font-semibold tracking-wider text-gray-900 text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+        data-lpignore="true" data-1p-ignore="true" data-form-type="other" autocomplete="new-password" />
+
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <button id="pwd-close" type="button"
+            class="text-sm text-white bg-black border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50"
+            data-i18n="password.close">
+            Close
+          </button>
+
+          <button id="pwd-toggle"
+            class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-white font-medium shadow focus:outline-none focus-visible:outline-none focus-within:outline-none"
+            data-i18n="password.show">
+            Show
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
