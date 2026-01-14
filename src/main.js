@@ -1,6 +1,21 @@
 import gsap from "gsap";
 import "./style.css";
 
+/**
+ * CONSTANTS
+ */
+const DEFAULT_LANG = "en";
+const DEFAULT_DOMAIN = "exam.icorsi.ch";
+const DEFAULT_H2 = 1.35;
+const DEFAULT_H3 = 1.10;
+
+const configOverlay = document.querySelector("#config-overlay");
+const configForm = document.querySelector("#config-form");
+const configReset = document.querySelector("#config-reset");
+
+/**
+ *  TRANSLATION
+ * */
 const I18N = {
   en: {
     "step.computerLogin": " Computer Login",
@@ -19,7 +34,11 @@ const I18N = {
     "password.exam": "Exam",
     "password.password": "Exam start password:",
     "password.close": "Close",
+    "password.hide": "Hide",
     "password.show": "Show",
+    "clock.live": "Live clock",
+    "clock.close": "Close",
+    "clock.clock": "Clock",
   },
   it: {
     "step.computerLogin": " Login con account personale",
@@ -39,18 +58,45 @@ const I18N = {
     "password.password": "Password esame:",
     "password.close": "Chiudi",
     "password.show": "Mostra",
+    "password.hide": "Nascondi",
+    "clock.live": "Live clock",
+    "clock.close": "Chiudi",
+    "clock.clock": "Orario",
   },
 };
 
-window.addEventListener("DOMContentLoaded", () => {
-  const DEFAULT_LANG = "en";
-  const DEFAULT_DOMAIN = "exam.icorsi.ch";
-  const DEFAULT_H2 = 1.35;
-  const DEFAULT_H3 = 1.10;
+// Translation utility functions
 
-  const configOverlay = document.querySelector("#config-overlay");
-  const configForm = document.querySelector("#config-form");
-  const configReset = document.querySelector("#config-reset");
+const t = (key) => {
+  const lang = getLangFromUrl?.() || DEFAULT_LANG;
+  return I18N[lang]?.[key] ?? I18N[DEFAULT_LANG]?.[key] ?? key;
+};
+
+
+const getLangFromUrl = () => {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("lang") || DEFAULT_LANG;
+};
+
+const setLangInUrl = (lang) => {
+  const url = new URL(window.location.href);
+  if (lang && lang !== DEFAULT_LANG) url.searchParams.set("lang", lang);
+  else url.searchParams.delete("lang");
+  window.history.replaceState({}, "", url.toString());
+};
+
+const applyLanguage = (lang) => {
+  const dict = I18N[lang] || I18N[DEFAULT_LANG];
+
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    if (!key) return;
+    const value = dict[key];
+    if (typeof value === "string") el.textContent = value;
+  });
+};
+
+window.addEventListener("DOMContentLoaded", () => {
   let scrollYBeforeOverlay = 0;
 
   /****** FUNCTIONS ******/
@@ -98,29 +144,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const applyDomain = (domain) => {
     const label = document.querySelector("#exam-domain-label");
     if (label) label.textContent = domain;
-  };
-
-  const getLangFromUrl = () => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("lang") || DEFAULT_LANG;
-  };
-
-  const setLangInUrl = (lang) => {
-    const url = new URL(window.location.href);
-    if (lang && lang !== DEFAULT_LANG) url.searchParams.set("lang", lang);
-    else url.searchParams.delete("lang");
-    window.history.replaceState({}, "", url.toString());
-  };
-
-  const applyLanguage = (lang) => {
-    const dict = I18N[lang] || I18N[DEFAULT_LANG];
-
-    document.querySelectorAll("[data-i18n]").forEach((el) => {
-      const key = el.getAttribute("data-i18n");
-      if (!key) return;
-      const value = dict[key];
-      if (typeof value === "string") el.textContent = value;
-    });
   };
 
   const clampNum = (v, min, max) => Math.min(max, Math.max(min, v));
@@ -608,7 +631,7 @@ window.addEventListener("DOMContentLoaded", () => {
     passwordVisible = false;
 
     const pwdToggle = document.querySelector("#pwd-toggle");
-    if (pwdToggle) pwdToggle.textContent = "Show";
+    if (pwdToggle) pwdToggle.textContent = t("password.show");
 
     document.body.classList.remove("overflow-hidden");
   };
@@ -624,7 +647,7 @@ window.addEventListener("DOMContentLoaded", () => {
     passwordVisible = false;
 
     const pwdToggle = document.querySelector("#pwd-toggle");
-    if (pwdToggle) pwdToggle.textContent = "Show";
+    if (pwdToggle) pwdToggle.textContent = t("password.show");
 
     pwdInput.focus();
   });
@@ -635,16 +658,25 @@ window.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     if (!pwdInput) return;
 
+    const value = pwdInput.value;
+    const caretPos = value.length; // we want cursor at the end
+
     passwordVisible = !passwordVisible;
 
+    pwdInput.type = passwordVisible ? "text" : "password";
+
+    // Restore value & caret after type switch
+    pwdInput.value = value;
+    requestAnimationFrame(() => {
+      pwdInput.setSelectionRange(caretPos, caretPos);
+    });
+
     if (passwordVisible) {
-      pwdInput.type = "text";
-      pwdInput.blur();
-      if (pwdToggle) pwdToggle.textContent = "Hide";
+      pwdInput.blur(); // prevent accidental typing while visible
+      if (pwdToggle) pwdToggle.textContent = t("password.hide");
     } else {
-      pwdInput.type = "password";
       pwdInput.focus();
-      if (pwdToggle) pwdToggle.textContent = "Show";
+      if (pwdToggle) pwdToggle.textContent = t("password.show");
     }
   });
 
@@ -657,6 +689,76 @@ window.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && pwdOverlay && !pwdOverlay.classList.contains("hidden")) {
       closePwdOverlay();
+    }
+  });
+
+  // ===== Fullscreen clock =====
+  const pwdClock = document.querySelector("#pwd-clock");
+  const clockOverlay = document.querySelector("#clock-overlay");
+  const clockClose = document.querySelector("#clock-close");
+  const clockTime = document.querySelector("#clock-time");
+
+  let clockTimer = null;
+
+  const formatTime = (d) => {
+    const hh = String(d.getHours()).padStart(2, "0");
+    const mm = String(d.getMinutes()).padStart(2, "0");
+    const ss = String(d.getSeconds()).padStart(2, "0");
+    return `${hh}:${mm}:${ss}`;
+  };
+
+  const startClock = () => {
+    if (!clockTime) return;
+    clockTime.textContent = formatTime(new Date());
+
+    if (clockTimer) clearInterval(clockTimer);
+    clockTimer = setInterval(() => {
+      clockTime.textContent = formatTime(new Date());
+    }, 250);
+  };
+
+  const stopClock = () => {
+    if (clockTimer) clearInterval(clockTimer);
+    clockTimer = null;
+  };
+
+  const openClockOverlay = () => {
+    if (!clockOverlay) return;
+
+    // Optional: close password overlay so only one is visible
+    closePwdOverlay?.();
+
+    clockOverlay.classList.remove("hidden");
+    clockOverlay.classList.add("flex");
+    clockOverlay.setAttribute("aria-hidden", "false");
+
+    document.body.classList.add("overflow-hidden");
+    startClock();
+  };
+
+  const closeClockOverlay = () => {
+    if (!clockOverlay) return;
+
+    clockOverlay.classList.add("hidden");
+    clockOverlay.classList.remove("flex");
+    clockOverlay.setAttribute("aria-hidden", "true");
+
+    stopClock();
+    document.body.classList.remove("overflow-hidden");
+  };
+
+  pwdClock?.addEventListener("click", openClockOverlay);
+  clockClose?.addEventListener("click", closeClockOverlay);
+
+  // Click outside closes
+  clockOverlay?.addEventListener("click", (e) => {
+    if (e.target === clockOverlay) closeClockOverlay();
+  });
+
+  // ESC closes clock if open
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && clockOverlay && !clockOverlay.classList.contains("hidden")) {
+      closeClockOverlay();
     }
   });
 });

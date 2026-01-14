@@ -116,12 +116,12 @@
 
       <div class="flex items-center justify-between gap-3 pt-5">
         <button id="config-reset" type="button"
-          class="config-reset-btn text-sm text-gray-800 bg-white border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50">
-          Reset selection
+          class="clear text-sm text-gray-800 bg-white border-2 border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50">
+          Reset
         </button>
         <button type="submit"
           class="inline-flex items-center justify-center rounded-lg bg-black px-4 py-2 text-white font-medium shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-          Start guide
+          Show guide
         </button>
       </div>
     </form>
@@ -248,7 +248,11 @@
   <button id="pwd-fab" type="button"
     class="z-40 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-2xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
     aria-label="Show exam password" title="Show exam password">
-    🔑
+    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#000" viewBox="0 0 256 256">
+      <path
+        d="M48,56V200a8,8,0,0,1-16,0V56a8,8,0,0,1,16,0Zm92,54.5L120,117V96a8,8,0,0,0-16,0v21L84,110.5a8,8,0,0,0-5,15.22l20,6.49-12.34,17a8,8,0,1,0,12.94,9.4l12.34-17,12.34,17a8,8,0,1,0,12.94-9.4l-12.34-17,20-6.49A8,8,0,0,0,140,110.5ZM246,115.64A8,8,0,0,0,236,110.5L216,117V96a8,8,0,0,0-16,0v21l-20-6.49a8,8,0,0,0-4.95,15.22l20,6.49-12.34,17a8,8,0,1,0,12.94,9.4l12.34-17,12.34,17a8,8,0,1,0,12.94-9.4l-12.34-17,20-6.49A8,8,0,0,0,246,115.64Z">
+      </path>
+    </svg>
   </button>
 
   <!-- Password overlay (same style as config overlay) -->
@@ -256,34 +260,59 @@
     aria-hidden="true">
     <form id="pwd-form" class="w-full max-w-xl bg-white shadow-xl rounded-2xl border border-gray-200 p-6 space-y-4"
       autocomplete="off">
-      <div class="space-y-1">
-        <!-- <p class="text-sm uppercase tracking-wide text-gray-500" data-i18n="password.exam">Exam</p> -->
+      <div class="w-full flex items-center justify-between space-y-1">
         <h2 class="text-2xl font-semibold text-gray-900" data-i18n="password.password">Exam password</h2>
-        <!-- <p class="text-sm text-gray-600">
-          To start the exam, type the following password:
-        </p> -->
+
+        <button id="pwd-close" type="button" class="clear--noborder text-sm px-3 py-2 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#000" viewBox="0 0 256 256">
+            <path
+              d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z">
+            </path>
+          </svg>
+        </button>
       </div>
 
       <input id="pwd-input" type="password" inputmode="text" autocomplete="off" spellcheck="false" placeholder=""
         class="w-full rounded-xl border mt-2 mb-6 border-gray-300 px-4 py-4 text-[clamp(1.8rem,3.2vw,3.2rem)] font-semibold tracking-wider text-gray-900 text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
         data-lpignore="true" data-1p-ignore="true" data-form-type="other" autocomplete="new-password" />
 
-      <div class="flex items-center justify-between gap-3">
-        <div class="flex items-center gap-2">
-          <button id="pwd-close" type="button"
-            class="text-sm text-white bg-black border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-50"
-            data-i18n="password.close">
-            Close
-          </button>
-
-          <button id="pwd-toggle"
-            class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-white font-medium shadow focus:outline-none focus-visible:outline-none focus-within:outline-none"
-            data-i18n="password.show">
-            Show
-          </button>
-        </div>
+      <div class="w-full flex items-center justify-between gap-3">
+        <button id="pwd-clock" type="button"
+          class="ttext-sm text-white bg-transparent border border-gray-300 px-3 py-2 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white"
+            class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </button>
+        <button id="pwd-toggle" class="text-sm text-white bg-transparent border border-gray-300 px-3 py-2 rounded-lg"
+          data-i18n="password.show">
+          Show
+        </button>
       </div>
     </form>
+  </div>
+  <div id="clock-overlay" class="fixed inset-0 z-60 bg-white backdrop-blur-sm hidden items-center justify-center p-6"
+    aria-hidden="true">
+    <div class="w-full h-full flex flex-col">
+      <div class="w-full flex items-center justify-between">
+        <div class="text-sm uppercase tracking-wide text-gray-600" data-i18n="clock.live">Live clock</div>
+
+        <button id="clock-close" type="button" class="clear--noborder text-sm px-3 py-2 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000" viewBox="0 0 256 256">
+            <path
+              d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z">
+            </path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex-1 flex items-center justify-center">
+        <div id="clock-time"
+          class="font-extrabold tracking-wider text-gray-900 text-center select-none text-[clamp(4rem,12vw,12rem)] leading-none [font-variant-numeric:tabular-nums]">
+          00:00:00
+        </div>
+      </div>
+    </div>
   </div>
   <script type="module" src="/src/main.js"></script>
 </body>
